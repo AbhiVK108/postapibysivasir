@@ -3,6 +3,7 @@ import 'package:post_api_demo/core/app_config/app_keys.dart';
 import 'package:post_api_demo/modules/authentication/views/home_page.dart';
 import 'package:post_api_demo/modules/authentication/views/login_page.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
       ),
       home: const LoginPage(),
       debugShowCheckedModeBanner: false,
-      routes: {'/homepage': (context) => const HomePage()},
+      routes: {'/homepage': (context) => const HomePage(),
+      },
       navigatorKey: AppKeys.navigatorkey,
     );
   }

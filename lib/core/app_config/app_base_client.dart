@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:post_api_demo/core/app_config/app_keys.dart';
 import 'package:post_api_demo/core/app_config/app_urls.dart';
 import 'package:http/http.dart' as http;
@@ -18,20 +17,31 @@ class BaseClient {
     };
   }
 
-  postRequest({required String endpoint, required dynamic requestBody}) async {
-    final uri = Uri.parse(AppUrl.baseUrl + AppUrl.auth + endpoint);
+   Future<dynamic> postRequest(
+      {required String endpoint, required dynamic requestBody}) async {
+    final uri = Uri.parse(AppUrl.baseUrl + endpoint);
     final response = await http.post(uri,
         headers: requestHeaders(), body: json.encode(requestBody));
+    print(response);
     return processResponse(response);
-  }
+  } 
 }
 
-processResponse(Response response) {
+ dynamic processResponse(http.Response response) {
   switch (response.statusCode) {
     case 200:
-      return response.body;
     case 201:
-      return response.body;
+      //............................decoder here..................................//
+      try {
+        var decodedResponse = json.decode(response.body);
+        print(decodedResponse);
+        return decodedResponse;
+
+      } catch (exception) {
+        
+        print(exception);
+        
+      }
     case 400:
       Navigator.of(AppKeys.navigatorkey.currentContext!).pushAndRemoveUntil(
           MaterialPageRoute(

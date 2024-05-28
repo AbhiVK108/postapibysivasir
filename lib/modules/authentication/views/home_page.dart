@@ -13,28 +13,37 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar:AppBar(
+    return Scaffold(
+      appBar: AppBar(
         backgroundColor: AppColors.teal,
-        title:const Text('Home Page'),
+        title: const Text('Home Page'),
         centerTitle: true,
-      
-      ) ,drawer:const Drawer(),
-      
+      ),
+      drawer: const Drawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('wecome to home page'),
-            SizedBox(height: 15.0,),
-            TextButton(onPressed: (){}, child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:const [
-                Icon(Icons.logout),
-                SizedBox(width: 10.0,),
-                Text('logout')
-              ],
-            ))
+            SizedBox(
+              height: 15.0,
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  ));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.logout),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Text('logout')
+                  ],
+                ))
           ],
         ),
       ),

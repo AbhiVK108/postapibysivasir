@@ -1,10 +1,12 @@
-// ignore_for_file: avoid_print, prefer_const_constructors
+// ignore_for_file: avoid_print, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:post_api_demo/core/app_config/app_base_client.dart';
 import 'package:post_api_demo/core/app_config/app_colors.dart';
+import 'package:post_api_demo/core/app_config/app_utils.dart';
 import 'package:post_api_demo/modules/authentication/model/user_model.dart';
 import 'package:post_api_demo/modules/authentication/services/authentication_services/auth_services.dart';
+import 'package:post_api_demo/modules/authentication/views/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,24 +19,48 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   validateTextField() {
-    if (_usernameController.text.trim() != "" ||
-        _passwordController.text.trim() != "") {
+    if (_usernameController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty) {
+      AppUtils.sharedUtils.alert(
+          context: context, title: "Error!", message: "please fill the text");
     } else {
       validateUserAuthenticationOnServer();
+      print('please fill textFields');
     }
   }
 
-  validateUserAuthenticationOnServer() {
+  validateUserAuthenticationOnServer() async {
+    var requestBody = {
+      "username": _usernameController.text,
+      "password": _passwordController.text,
+    };
     try {
-      var requestBody = {
-        "username": _usernameController.text,
-        "password": _passwordController.text,
-      };
       UserDetailsModel response =
-          AuthenticationServices.validateLoginInformation(requestBody);
-      print('response.firstName');
+          await AuthenticationServices.validateLoginInformation(requestBody);
       print(response);
+      // ignore: unnecessary_null_comparison
+      if (response != null) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+                child: Text('Login failed: please enter correct details')),
+          ),
+        );
+      }
+      return response;
     } catch (exception) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Center(child: Text('Login failed: please enter correct details')),
+        ),
+      );
       print(exception);
     }
   }
@@ -89,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: TextButton(
-                  onPressed: validateUserAuthenticationOnServer,
+                  onPressed: validateTextField,
                   style: ButtonStyle(
                       backgroundColor:
                           MaterialStatePropertyAll(AppColors.teal)),
